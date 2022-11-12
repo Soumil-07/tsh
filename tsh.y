@@ -59,7 +59,15 @@ cmd_and_args:
             ;
 
 arg_list:
-        arg_list WORD { add_arg($2); }
+        arg_list WORD { 
+            char* arg = $2;
+            if (arg[0] == '$') {
+                // expand the environment variable
+                arg++; // remove the leading '$'
+                arg = getenv(arg);
+            }
+            add_arg(arg); 
+        }
         | /* empty */
             ;
 
